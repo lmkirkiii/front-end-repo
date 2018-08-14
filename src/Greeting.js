@@ -12,80 +12,9 @@ class Greeting extends Component {
             greetingsTo: [],
             greetingsFrom: [],
             greetingsMessage: [],
-            To: '',
-            From: '',
-            Message: ''
-
         }
-        this.handleMessageTo = this.handleMessageTo.bind(this);
-        this.handleMessageFrom = this.handleMessageFrom.bind(this);
-        this.handleMessageMessage = this.handleMessageMessage.bind(this);
     }
 
-     handleMessageTo(e) {
-        this.setState({ To: e.target.value });
-      }
-      handleMessageFrom(e) {
-        this.setState({ From: e.target.value });
-      }
-      handleMessageMessage(e) {
-        this.setState({ Message: e.target.value });
-      }
-      handleSubmitTo() {
-        if (this.state.isFormFilledProfile) {
-            const data = {
-                To: this.state.To,
-              };
-              request
-              .post('/api/greeting-card')
-              .send(data)
-              .set('Accept', 'application/json')
-              .end((err, res) => {
-                if (err || !res.ok) {
-                  console.log('Oh no! err');
-                } else {
-                  console.log('Success');
-                }
-              });
-          }
-        }
-        handleSubmitFrom() {
-            if (this.state.isFormFilledProfile) {
-                const data = {
-                    From: this.state.From,
-                  };
-                  request
-                  .post('/api/greeting-card')
-                  .send(data)
-                  .set('Accept', 'application/json')
-                  .end((err, res) => {
-                    if (err || !res.ok) {
-                      console.log('Oh no! err');
-                    } else {
-                      console.log('Success');
-                    }
-                  });
-              }
-            }
-            handleSubmitMessage() {
-                if (this.state.isFormFilledProfile) {
-                    const data = {
-                        Message: this.state.Message,
-                      };
-                      request
-                      .post('/api/greeting-card')
-                      .send(data)
-                      .set('Accept', 'application/json')
-                      .end((err, res) => {
-                        if (err || !res.ok) {
-                          console.log('Oh no! err');
-                        } else {
-                          console.log('Success');
-                        }
-                      });
-                  }
-                }
-        
     componentDidMount(){
         axios.get("http://localhost:3001/api/greeting-card")
         .then((res)=>{
@@ -99,12 +28,53 @@ class Greeting extends Component {
     }).catch((err)=>{
             console.log(err)
         })
+}
+    deleteGreeting(){
+        var  input1 = document.querySelector('#one').value
+        var input2 = document.querySelector('#two').value
+        var input3 = document.querySelector('#three').value
+
+        axios({
+            method: 'delete',
+            url: 'http://localhost:3001/api/greeting-card',
+            params: {
+            to: input1,
+            from: input2,
+            message: input3},
+            config: { headers: {'Content-Type': 'multipart/form-data' }}
+
+            })
+            .then(function (response) {
+                //handle success
+                console.log(response);
+            })
+            .catch(function (response) {
+                //handle error
+                console.log(response);
+            });
     }
+
     addGreeting(){
-        axios.post("http://localhost:3001/api/greeting-card/add")
-        .catch((err) => {
-            console.log(err)
-          })
+        var  input1 = document.querySelector('#one').value
+        var input2 = document.querySelector('#two').value
+        var input3 = document.querySelector('#three').value
+        axios({
+            method: 'post',
+            url: 'http://localhost:3001/api/greeting-card',
+            data: {
+            to: input1,
+            from: input2,
+            message: input3},
+            config: { headers: {'Content-Type': 'multipart/form-data' }}
+            })
+            .then(function (response) {
+                //handle success
+                console.log(response);
+            })
+            .catch(function (response) {
+                //handle error
+                console.log(response);
+            });
     }
    
     render(){
@@ -120,19 +90,17 @@ class Greeting extends Component {
             <li>From: {greetingsFrom }</li>
             <li> Message: {greetingsMessage}</li>
             </ul>
-        <form onSubmit={this.handleSubmitMessage,this.handleSubmitFrom,this.handelSubmitTo}>
-        <p class="input-field">
-        <textarea name="add[to]" placeholder="To" value="></textarea>
-        </p>
-        <p class="input-field">
-        <textarea name="add[from]" placeholder="From"></textarea>
-        </p>
-        <p class="input-field">
-        <textarea name="add[message]" placeholder="Message"></textarea>
-        </p>
-        <p class="input-field">
-        <input onClick={ this.addGreeting.bind()} type="submit" value="add-message"></input>
-        </p>
+        <form>
+            <ul>
+       <li><input id="one" type="text"></input></li>
+       <li><input id="two" type="text"></input></li>
+        <li><input id="three" type="text"></input></li>
+       <li><input onClick={this.addGreeting.bind(this)} type="submit" value="add-message"></input></li>
+       <li><input onClick={this.deleteGreeting.bind(this)} type="submit" value="Delete Message"></input></li>
+            </ul>
+        </form>
+        <form>
+
         </form>
         </div>
 
@@ -141,57 +109,3 @@ class Greeting extends Component {
 }
 
 export default Greeting
-
-import React, { Component } from 'react';
-import request from 'superagent';
-
-class componentName extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      message: '',
-    };
-    this.handleMessageInput = this.handleMessageInput.bind(this);
-  }
-  handleMessageInput(e) {
-    this.setState({ message: e.target.value });
-  }
-  handleSubmitMessage() {
-    console.log('starting to submit profile');
-    if (this.state.isFormFilledProfile) {
-      console.log('Profile Form appears filled');
-      const data = {
-        message: this.state.message,
-      };
-
-      request
-        .post('/api/messages')
-        .send(data)
-        .set('Accept', 'application/json')
-        .end((err, res) => {
-          if (err || !res.ok) {
-            console.log('Oh no! err');
-          } else {
-            console.log('Success');
-          }
-        });
-    }
-  }
-  render() {
-    return (
-      <div>
-        <div>
-          <form onSubmit={this.handleSubmitMessage}>
-            <input
-              onChange={this.handleMessageInput}
-              value={this.state.message}
-            />
-            <button type='Submit' value='Submit'>Submit</button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-}
-
-export default componentName;
