@@ -28,8 +28,8 @@ class Greeting extends Component {
     }).catch((err)=>{
             console.log(err)
         })
-}
-    deleteGreeting(){
+    }
+     deleteGreeting(){
         var  input1 = document.querySelector('#one').value
         var input2 = document.querySelector('#two').value
         var input3 = document.querySelector('#three').value
@@ -54,8 +54,9 @@ class Greeting extends Component {
             });
     }
 
+
     addGreeting(){
-        var  input1 = document.querySelector('#one').value
+        var input1 = document.querySelector('#one').value
         var input2 = document.querySelector('#two').value
         var input3 = document.querySelector('#three').value
         axios({
@@ -65,17 +66,36 @@ class Greeting extends Component {
             to: input1,
             from: input2,
             message: input3},
-            config: { headers: {'Content-Type': 'multipart/form-data' }}
+            config: { headers: {'Content-Type': 'application/json' }}
             })
             .then(function (response) {
-                //handle success
                 console.log(response);
             })
             .catch(function (response) {
-                //handle error
                 console.log(response);
             });
     }
+
+    // updateGreeting(){
+    //     var input1 = document.querySelector('#one').value
+    //     var input2 = document.querySelector('#two').value
+    //     var input3 = document.querySelector('#three').value
+    //     axios({
+    //         method: 'put',
+    //         url: 'http://localhost:3001/api/greeting-card',
+    //         data: {
+    //         to: input1,
+    //         from: input2,
+    //         message: input3},
+    //         config: { headers: {'Content-Type': 'application/json' }}
+    //         })
+    //         .then(function (response) {
+    //             console.log(response);
+    //         })
+    //         .catch(function (response) {
+    //             console.log(response);
+    //         });
+    // }
    
     render(){
         var greetingsTo = this.state.greetingsTo
@@ -84,6 +104,7 @@ class Greeting extends Component {
 
         return(
         <div>
+            
             <h1>My Greetings</h1>
             <ul>
             <li>To: { greetingsTo }</li>
@@ -92,11 +113,12 @@ class Greeting extends Component {
             </ul>
         <form>
             <ul>
-       <li><input id="one" type="text"></input></li>
-       <li><input id="two" type="text"></input></li>
-        <li><input id="three" type="text"></input></li>
+       <li>To:<input id="one" type="text"></input></li>
+       <li>From:<input id="two" type="text"></input></li>
+        <li>Message:<input id="three" type="text"></input></li>
        <li><input onClick={this.addGreeting.bind(this)} type="submit" value="add-message"></input></li>
        <li><input onClick={this.deleteGreeting.bind(this)} type="submit" value="Delete Message"></input></li>
+       {/* <li><input onClick={this.updateGreeting.bind(this)} type="submit" value="Update Message"></input></li> */}
             </ul>
         </form>
         <form>
@@ -106,6 +128,8 @@ class Greeting extends Component {
 
         )
     }
-}
+ }
 
 export default Greeting
+
+   
